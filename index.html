@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MEXA — Social Platform</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070910;
+  --panel:#101522;
+  --panel2:#151b2a;
+  --line:#252d40;
+  --text:#f4f7ff;
+  --muted:#8c96aa;
+  --accent:#7c5cff;
+  --accent2:#00e5ff;
+  --danger:#ff4d6d;
+}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(124,92,255,.13),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(0,229,255,.08),transparent 25%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* LOGIN */
+#authScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.authBox{
+  width:100%;
+  max-width:420px;
+  background:rgba(16,21,34,.92);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:30px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+.logo{
+  font-size:38px;
+  font-weight:1000;
+  letter-spacing:5px;
+  text-align:center;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.logoSmall{
+  font-size:25px;
+  font-weight:1000;
+  letter-spacing:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.authTitle{text-align:center;margin:12px 0 5px}
+.authSub{text-align:center;color:var(--muted);margin-bottom:24px}
+.field{margin-bottom:13px}
+.field input,.field textarea,.search{
+  width:100%;
+  background:#0b0f19;
+  border:1px solid var(--line);
+  color:white;
+  border-radius:13px;
+  padding:13px 14px;
+  outline:none;
+}
+.field input:focus,.field textarea:focus,.search:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(124,92,255,.1);
+}
+.primary{
+  border:0;
+  color:white;
+  font-weight:800;
+  padding:13px 18px;
+  border-radius:13px;
+  background:linear-gradient(100deg,var(--accent),#5541ff,var(--accent2));
+  width:100%;
+  margin-top:5px;
+}
+.switch{
+  text-align:center;
+  color:var(--muted);
+  margin-top:18px;
+}
+.switch span{color:#9c8cff;cursor:pointer;font-weight:700}
+.status{
+  margin-top:14px;
+  padding:10px;
+  border-radius:10px;
+  background:#0b0f19;
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+}
+
+/* APP */
+#app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:220px minmax(0,700px) 260px;
+  gap:18px;
+  max-width:1250px;
+  margin:auto;
+  padding:18px;
+}
+.sidebar,.rightbar{
+  position:sticky;
+  top:18px;
+  height:calc(100vh - 36px);
+}
+.sideCard,.rightCard,.composer,.post{
+  background:rgba(16,21,34,.9);
+  border:1px solid var(--line);
+  border-radius:20px;
+}
+.sideCard{
+  height:100%;
+  padding:18px 12px;
+  display:flex;
+  flex-direction:column;
+}
+.brand{
+  padding:5px 10px 25px;
+  text-align:center;
+}
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.nav button{
+  border:0;
+  background:transparent;
+  color:#b9c1d2;
+  text-align:left;
+  padding:12px;
+  border-radius:12px;
+}
+.nav button:hover,.nav button.active{
+  background:rgba(124,92,255,.14);
+  color:white;
+}
+.navBottom{margin-top:auto}
+.main{
+  min-width:0;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(7,9,16,.85);
+  backdrop-filter:blur(14px);
+  padding-bottom:12px;
+}
+.toprow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.search{
+  flex:1;
+  height:44px;
+}
+.iconBtn{
+  width:44px;
+  height:44px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:white;
+  border-radius:13px;
+}
+.pageTitle{
+  margin:18px 0 13px;
+  font-size:25px;
+}
+.composer{
+  padding:15px;
+  margin-bottom:15px;
+}
+.composerTop{
+  display:flex;
+  gap:10px;
+}
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  overflow:hidden;
+  flex:none;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.postInput{
+  flex:1;
+  min-height:45px;
+  resize:none;
+  background:#0b0f19;
+  border:1px solid var(--line);
+  color:white;
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.composerActions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+.tools{display:flex;gap:7px}
+.tool{
+  border:1px solid var(--line);
+  background:#0b0f19;
+  color:#bfc7d8;
+  border-radius:10px;
+  padding:8px 10px;
+}
+.postBtn{
+  border:0;
+  color:white;
+  background:linear-gradient(100deg,var(--accent),var(--accent2));
+  font-weight:900;
+  border-radius:11px;
+  padding:9px 17px;
+  box-shadow:0 0 20px rgba(124,92,255,.2);
+}
+.filePreview{
+  margin-top:10px;
+  border-radius:13px;
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+.filePreview img,.filePreview video{
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
+  background:#000;
+}
+
+/* POST */
+.post{
+  padding:15px;
+  margin-bottom:13px;
+  animation:fade .25s ease;
+}
+@keyframes fade{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+.postHead{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.userInfo{flex:1}
+.userInfo b{display:block}
+.userInfo small{color:var(--muted)}
+.more{
+  border:0;
+  background:transparent;
+  color:#aeb7ca;
+  font-size:23px;
+  padding:5px 9px;
+}
+.postText{
+  padding:14px 3px;
+  line-height:1.55;
+  white-space:pre-wrap;
+}
+.postMedia{
+  width:100%;
+  max-height:520px;
+  object-fit:contain;
+  background:#050609;
+  border-radius:14px;
+}
+.stats{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:12px;
+  padding:10px 3px;
+}
+.postActions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--line);
+  padding-top:8px;
+}
+.postActions button{
+  background:transparent;
+  border:0;
+  color:#b9c1d2;
+  padding:9px 5px;
+  border-radius:9px;
+}
+.postActions button:hover{background:#171d2b;color:white}
+.commentBox{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+}
+.commentBox input{
+  flex:1;
+  background:#0b0f19;
+  border:1px solid var(--line);
+  color:white;
+  border-radius:10px;
+  padding:9px;
+}
+.commentBox button{
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:white;
+  padding:0 13px;
+}
+
+/* RIGHT */
+.rightCard{
+  padding:15px;
+  margin-bottom:14px;
+}
+.rightTitle{font-weight:900;margin-bottom:13px}
+.trend{
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.trend:last-child{border:0}
+.trend small{color:var(--muted)}
+.profileBox{text-align:center}
+.profileBig{
+  width:72px;height:72px;border-radius:50%;
+  margin:5px auto 10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:25px;font-weight:900;
+  overflow:hidden;
+}
+.profileBig img{width:100%;height:100%;object-fit:cover}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  justify-content:flex-end;
+}
+.panel{
+  width:min(400px,94vw);
+  height:100%;
+  background:#0d121e;
+  border-left:1px solid var(--line);
+  padding:20px;
+  overflow:auto;
+}
+.panelHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.panelHead button{
+  border:0;background:#171d2b;color:white;border-radius:10px;padding:8px 12px;
+}
+.menu{
+  position:fixed;
+  z-index:150;
+  background:#111725;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:6px;
+  box-shadow:0 15px 50px #000;
+}
+.menu button{
+  display:block;
+  width:150px;
+  border:0;
+  background:transparent;
+  color:white;
+  text-align:left;
+  padding:10px;
+  border-radius:8px;
+}
+.menu button:hover{background:#20283a}
+.menu .danger{color:#ff7189}
+
+/* MOBILE */
+.mobileNav{
+  display:none;
+}
+@media(max-width:1000px){
+  #app{grid-template-columns:75px minmax(0,700px);max-width:800px}
+  .rightbar{display:none}
+  .sideCard{padding:12px 7px}
+  .logoSmall{font-size:20px}
+  .nav button{font-size:0;text-align:center}
+  .nav button::first-letter{font-size:20px}
+}
+@media(max-width:650px){
+  #app{
+    display:block;
+    padding:10px 10px 75px;
+  }
+  .sidebar{display:none}
+  .main{width:100%}
+  .mobileNav{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:90;
+    background:rgba(10,13,22,.96);
+    border-top:1px solid var(--line);
+    justify-content:space-around;
+    padding:8px 4px;
+    backdrop-filter:blur(15px);
+  }
+  .mobileNav button{
+    border:0;background:transparent;color:#aeb7ca;
+    font-size:11px;
+  }
+  .mobileNav button b{
+    display:block;
+    font-size:18px;
+    margin-bottom:2px;
+  }
+  .pageTitle{font-size:21px}
+  .composer{padding:11px}
+  .tools .tool{font-size:12px;padding:7px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+<section id="authScreen">
+  <div class="authBox">
+    <div class="logo">MEXA</div>
+    <div class="authTitle" id="authTitle">Masuk ke MEXA</div>
+    <div class="authSub" id="authSub">Platform sosial generasi baru</div>
+
+    <div id="nameField" class="field hidden">
+      <input id="nameInput" type="text" placeholder="Nama">
+    </div>
+
+    <div class="field">
+      <input id="emailInput" type="email" placeholder="Email">
+    </div>
+
+    <div class="field">
+      <input id="passwordInput" type="password" placeholder="Password">
+    </div>
+
+    <button class="primary" id="authButton" onclick="submitAuth()">MASUK</button>
+
+    <div class="switch">
+      <span id="switchText">Belum punya akun?</span>
+      <span onclick="toggleAuth()" id="switchBtn">Daftar</span>
+    </div>
+
+    <div class="status" id="authStatus"></div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" class="hidden">
+
+  <aside class="sidebar">
+    <div class="sideCard">
+      <div class="brand">
+        <div class="logoSmall">MEXA</div>
+      </div>
+
+      <nav class="nav">
+        <button class="active" onclick="showPage('home')">⌂ &nbsp; Beranda</button>
+        <button onclick="showPage('monetisasi')">◈ &nbsp; Monetisasi</button>
+        <button onclick="showPage('reels')">▶ &nbsp; Reels</button>
+        <button onclick="showPage('profile')">● &nbsp; Profil</button>
+      </nav>
+
+      <nav class="nav navBottom">
+        <button onclick="showMessenger()">✉ &nbsp; Messenger MEXA</button>
+        <button onclick="showSettings()">⚙ &nbsp; Pengaturan</button>
+        <button onclick="logout()">↪ &nbsp; Keluar</button>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div class="toprow">
+        <input id="searchInput" class="search"
+          placeholder="Cari orang atau kreator..."
+          oninput="searchPeople(this.value)">
+        <button class="iconBtn" onclick="loadPosts()">↻</button>
+      </div>
+    </header>
+
+    <div id="pageHome">
+      <h1 class="pageTitle">Beranda</h1>
+
+      <section class="composer">
+        <div class="composerTop">
+          <div class="avatar" id="composerAvatar">M</div>
+          <textarea id="postContent" class="postInput"
+            placeholder="Apa yang ingin kamu bagikan di MEXA?"></textarea>
+        </div>
+
+        <div id="uploadPreview"></div>
+
+        <div class="composerActions">
+          <div class="tools">
+            <button class="tool" onclick="document.getElementById('mediaInput').click()">📷 Foto/Video</button>
+            <button class="tool" onclick="clearComposer()">✕</button>
+          </div>
+          <button class="postBtn" onclick="createPost()">POST</button>
+        </div>
+
+        <input id="mediaInput" type="file"
+          accept="image/*,video/*"
+          hidden onchange="previewMedia(this)">
+      </section>
+
+      <div id="feed"></div>
+    </div>
+
+    <div id="pageMonetisasi" class="hidden">
+      <h1 class="pageTitle">Monetisasi</h1>
+      <div class="composer">
+        <h2>Creator Center</h2>
+        <p style="color:var(--muted);margin-top:8px">
+          Bangun audiens dan kembangkan akun MEXA kamu.
+        </p>
+        <div style="margin-top:20px">
+          <b>Minimal 1.000 pengikut</b>
+          <div style="height:9px;background:#202738;border-radius:20px;margin-top:10px">
+            <div style="width:0%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:20px"></div>
+          </div>
+          <small style="color:var(--muted)">0 / 1.000</small>
+        </div>
+      </div>
+    </div>
+
+    <div id="pageReels" class="hidden">
+      <h1 class="pageTitle">Reels</h1>
+      <div class="composer">
+        <h3>🎬 Reels MEXA</h3>
+        <p style="color:var(--muted);margin-top:8px">
+          Video pendek dari komunitas MEXA akan tampil di sini.
+        </p>
+      </div>
+    </div>
+
+    <div id="pageProfile" class="hidden">
+      <h1 class="pageTitle">Profil</h1>
+      <div class="composer profileBox">
+        <div class="profileBig" id="profileAvatar">M</div>
+        <h2 id="profileName">MEXA User</h2>
+        <p id="profileUsername" style="color:var(--muted)">@user</p>
+        <button class="postBtn" style="margin-top:15px" onclick="showSettings()">
+          Edit Profil
+        </button>
+      </div>
+      <div id="profilePosts"></div>
+    </div>
+
+  </main>
+
+  <aside class="rightbar">
+    <div class="rightCard profileBox">
+      <div class="profileBig" id="sideAvatar">M</div>
+      <b id="sideName">MEXA User</b>
+      <p id="sideUsername" style="color:var(--muted);margin-top:4px">@user</p>
+    </div>
+
+    <div class="rightCard">
+      <div class="rightTitle">Tren MEXA</div>
+      <div class="trend"><b>#MEXA</b><br><small>Komunitas MEXA</small></div>
+      <div class="trend"><b>#Gaming</b><br><small>Topik populer</small></div>
+      <div class="trend"><b>#Kreator</b><br><small>Para kreator</small></div>
+    </div>
+  </aside>
+</section>
+
+<!-- MOBILE NAV -->
+<nav class="mobileNav hidden" id="mobileNav">
+  <button onclick="showPage('home')"><b>⌂</b>Home</button>
+  <button onclick="showPage('reels')"><b>▶</b>Reels</button>
+  <button onclick="showPage('profile')"><b>●</b>Profil</button>
+  <button onclick="showSettings()"><b>☰</b>Menu</button>
+</nav>
+
+<!-- SETTINGS -->
+<div id="settingsOverlay" class="overlay hidden">
+  <div class="panel">
+    <div class="panelHead">
+      <h2>Pengaturan</h2>
+      <button onclick="closeOverlay('settingsOverlay')">✕</button>
+    </div>
+
+    <div class="field">
+      <label>Nama tampilan</label>
+      <input id="editName" placeholder="Nama">
+    </div>
+
+    <div class="field">
+      <label>Username</label>
+      <input id="editUsername" placeholder="username">
+    </div>
+
+    <div class="field">
+      <label>URL foto profil</label>
+      <input id="editAvatar" placeholder="https://...">
+    </div>
+
+    <button class="primary" onclick="saveProfile()">Simpan Profil</button>
+
+    <div class="rightCard" style="margin-top:20px">
+      <b>Privasi & keamanan</b>
+      <p style="color:var(--muted);margin-top:8px">
+        Data autentikasi diproses melalui backend MEXA dan Supabase.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- MESSENGER -->
+<div id="messengerOverlay" class="overlay hidden">
+  <div class="panel">
+    <div class="panelHead">
+      <h2>Messenger MEXA</h2>
+      <button onclick="closeOverlay('messengerOverlay')">✕</button>
+    </div>
+
+    <div class="rightCard">
+      <h3>💬 Messenger</h3>
+      <p style="color:var(--muted);margin-top:8px">
+        Sistem pesan MEXA siap dikembangkan pada tahap berikutnya.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- POST MENU -->
+<div id="postMenu" class="menu hidden"></div>
+
+<script>
+const MEXA_API =
+"https://mzcobvfvmhpleonncyrr.supabase.co/functions/v1/mexa-api";
+
+let authMode="login";
+let currentUser=null;
+let selectedMedia=null;
+let allPosts=[];
+
+/* =========================
+   SESSION
+========================= */
+
+function getToken(){
+  let token=localStorage.getItem("mexa_access_token");
+  if(token) return token;
+
+  try{
+    const session=JSON.parse(
+      localStorage.getItem("mexa_session") || "null"
+    );
+    if(session && session.access_token)
+      return session.access_token;
+  }catch(e){}
+
+  return "";
+}
+
+function getRefreshToken(){
+  let token=localStorage.getItem("mexa_refresh_token");
+  if(token) return token;
+
+  try{
+    const session=JSON.parse(
+      localStorage.getItem("mexa_session") || "null"
+    );
+    return session?.refresh_token || "";
+  }catch(e){
+    return "";
+  }
+}
+
+function saveSession(session){
+  if(!session)return;
+
+  localStorage.setItem(
+    "mexa_session",
+    JSON.stringify(session)
+  );
+
+  if(session.access_token)
+    localStorage.setItem(
+      "mexa_access_token",
+      session.access_token
+    );
+
+  if(session.refresh_token)
+    localStorage.setItem(
+      "mexa_refresh_token",
+      session.refresh_token
+    );
+}
+
+async function refreshSession(){
+  const refresh_token=getRefreshToken();
+
+  if(!refresh_token)return false;
+
+  try{
+    const response=await fetch(MEXA_API,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"refresh",
+        refresh_token
+      })
+    });
+
+    const result=await response.json();
+
+    if(result.success && result.session){
+      saveSession(result.session);
+      return true;
+    }
+  }catch(e){}
+
+  return false;
+}
+
+/* =========================
+   API
+========================= */
+
+async function mexaAPI(action,body={}){
+  let token=getToken();
+
+  const headers={
+    "Content-Type":"application/json"
+  };
+
+  if(token)
+    headers.Authorization="Bearer "+token;
+
+  try{
+    let response=await fetch(MEXA_API,{
+      method:"POST",
+      headers,
+      body:JSON.stringify({
+        action,
+        ...body
+      })
+    });
+
+    let result;
+
+    try{
+      result=await response.json();
+    }catch(e){
+      return {
+        success:false,
+        error:"Respons server bukan JSON."
+      };
+    }
+
+    if(response.status===401 && getRefreshToken()){
+      const refreshed=await refreshSession();
+
+      if(refreshed){
+        token=getToken();
+
+        response=await fetch(MEXA_API,{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer "+token
+          },
+          body:JSON.stringify({
+            action,
+            ...body
+          })
+        });
+
+        return await response.json();
+      }
+    }
+
+    return result;
+
+  }catch(error){
+    return {
+      success:false,
+      error:error?.message || "Gagal menghubungi server."
+    };
+  }
+}
+
+/* =========================
+   AUTH
+========================= */
+
+function toggleAuth(){
+  authMode=authMode==="login"?"signup":"login";
+
+  document.getElementById("nameField")
+    .classList.toggle("hidden",authMode==="login");
+
+  document.getElementById("authTitle").textContent=
+    authMode==="login"
+      ?"Masuk ke MEXA"
+      :"Buat akun MEXA";
+
+  document.getElementById("authButton").textContent=
+    authMode==="login"
+      ?"MASUK"
+      :"DAFTAR";
+
+  document.getElementById("switchText").textContent=
+    authMode==="login"
+      ?"Belum punya akun?"
+      :"Sudah punya akun?";
+
+  document.getElementById("switchBtn").textContent=
+    authMode==="login"
+      ?"Daftar"
+      :"Masuk";
+}
+
+async function submitAuth(){
+
+  const email=document.getElementById("emailInput").value.trim();
+  const password=document.getElementById("passwordInput").value;
+  const name=document.getElementById("nameInput").value.trim();
+
+  const status=document.getElementById("authStatus");
+
+  if(!email || !password ||
+     (authMode==="signup" && !name)){
+    status.textContent=
+      authMode==="signup"
+      ?"Nama, email, dan password wajib diisi."
+      :"Email dan password wajib diisi.";
+    return;
+  }
+
+  status.textContent="Memproses...";
+
+  const result=await mexaAPI(
+    authMode==="login"?"login":"signup",
+    authMode==="login"
+    ?{
+      email,
+      password
+    }
+    :{
+      name,
+      email,
+      password
+    }
+  );
+
+  if(!result.success){
+    status.textContent=
+      result.error ||
+      result.message ||
+      "Terjadi kesalahan.";
+    return;
+  }
+
+  if(result.session){
+    saveSession(result.session);
+    currentUser=result.user || null;
+    await enterApp();
+    return;
+  }
+
+  status.textContent=
+    result.message ||
+    "Berhasil. Silakan login.";
+}
+
+/* =========================
+   APP
+========================= */
+
+async function enterApp(){
+
+  document.getElementById("authScreen")
+    .classList.add("hidden");
+
+  document.getElementById("app")
+    .classList.remove("hidden");
+
+  document.getElementById("mobileNav")
+    .classList.remove("hidden");
+
+  await loadProfile();
+  await loadPosts();
+}
+
+function logout(){
+  localStorage.removeItem("mexa_access_token");
+  localStorage.removeItem("mexa_refresh_token");
+  localStorage.removeItem("mexa_session");
+
+  location.reload();
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+async function loadProfile(){
+
+  const result=await mexaAPI("profile");
+
+  if(!result.success)return;
+
+  currentUser=result.profile || result.user || currentUser;
+
+  const profile=currentUser || {};
+
+  const name=
+    profile.display_name ||
+    profile.username ||
+    "MEXA User";
+
+  const username=
+    profile.username ||
+    "user";
+
+  document.getElementById("profileName").textContent=name;
+  document.getElementById("profileUsername").textContent="@"+username;
+
+  document.getElementById("sideName").textContent=name;
+  document.getElementById("sideUsername").textContent="@"+username;
+
+  setAvatar("profileAvatar",profile.avatar_url,name);
+  setAvatar("sideAvatar",profile.avatar_url,name);
+  setAvatar("composerAvatar",profile.avatar_url,name);
+
+  document.getElementById("editName").value=
+    profile.display_name || "";
+
+  document.getElementById("editUsername").value=
+    profile.username || "";
+
+  document.getElementById("editAvatar").value=
+    profile.avatar_url || "";
+}
+
+function setAvatar(id,url,name){
+  const el=document.getElementById(id);
+
+  if(!el)return;
+
+  if(url){
+    el.innerHTML="<img src=\""+
+      escapeAttr(url)+
+      "\" onerror=\"this.remove()\">";
+  }else{
+    el.textContent=
+      (name||"M").charAt(0).toUpperCase();
+  }
+}
+
+async function saveProfile(){
+
+  const display_name=
+    document.getElementById("editName").value.trim();
+
+  const username=
+    document.getElementById("editUsername").value.trim();
+
+  const avatar_url=
+    document.getElementById("editAvatar").value.trim();
+
+  const result=await mexaAPI(
+    "update_profile",
+    {
+      display_name,
+      username,
+      avatar_url
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal menyimpan profil.");
+    return;
+  }
+
+  closeOverlay("settingsOverlay");
+  await loadProfile();
+}
+
+/* =========================
+   POSTS
+========================= */
+
+async function loadPosts(){
+
+  const feed=document.getElementById("feed");
+
+  feed.innerHTML=
+    '<div class="composer" style="text-align:center;color:var(--muted)">Memuat postingan...</div>';
+
+  const result=await mexaAPI("posts");
+
+  if(!result.success){
+    feed.innerHTML=
+      '<div class="composer">Gagal memuat postingan.</div>';
+    return;
+  }
+
+  allPosts=
+    result.posts ||
+    result.data ||
+    [];
+
+  renderPosts(allPosts);
+}
+
+function renderPosts(posts){
+
+  const feed=document.getElementById("feed");
+
+  if(!posts.length){
+    feed.innerHTML=
+      '<div class="composer" style="text-align:center;color:var(--muted)">Belum ada postingan. Jadilah yang pertama di MEXA 🚀</div>';
+    return;
+  }
+
+  feed.innerHTML=posts.map(post=>postHTML(post)).join("");
+}
+
+function postHTML(post){
+
+  const name=
+    post.display_name ||
+    post.username ||
+    "MEXA User";
+
+  const username=
+    post.username ||
+    "user";
+
+  const avatar=post.avatar_url || "";
+
+  const media=post.image_url
+    ? renderMedia(post.image_url)
+    :"";
+
+  return `
+    <article class="post" id="post-${escapeAttr(post.id)}">
+
+      <div class="postHead">
+
+        <div class="avatar">
+          ${
+            avatar
+            ? `<img src="${escapeAttr(avatar)}">`
+            : escapeHTML(name.charAt(0).toUpperCase())
+          }
+        </div>
+
+        <div class="userInfo">
+          <b>${escapeHTML(name)}</b>
+          <small>@${escapeHTML(username)} · ${formatDate(post.created_at)}</small>
+        </div>
+
+        <button class="more"
+          onclick="openPostMenu(event,'${escapeAttr(post.id)}','${escapeAttr(post.user_id)}')">
+          ⋮
+        </button>
+
+      </div>
+
+      ${
+        post.content
+        ? `<div class="postText">${escapeHTML(post.content)}</div>`
+        :""
+      }
+
+      ${media}
+
+      <div class="stats">
+        <span>👁 ${Number(post.views_count||post.views||0)}</span>
+        <span>♥ ${Number(post.likes_count||post.likes||0)} · 💬 ${Number(post.comments_count||post.comments||0)} · ↗ ${Number(post.shares_count||post.shares||0)}</span>
+      </div>
+
+      <div class="postActions">
+        <button onclick="likePost('${escapeAttr(post.id)}')">♥ Suka</button>
+        <button onclick="toggleComments('${escapeAttr(post.id)}')">💬 Komentar</button>
+        <button onclick="sharePost('${escapeAttr(post.id)}')">↗ Bagikan</button>
+      </div>
+
+      <div id="comments-${escapeAttr(post.id)}" class="hidden">
+        <div class="commentBox">
+          <input id="commentInput-${escapeAttr(post.id)}"
+            placeholder="Tulis komentar...">
+          <button onclick="sendComment('${escapeAttr(post.id)}')">Kirim</button>
+        </div>
+        <div id="commentList-${escapeAttr(post.id)}"></div>
+      </div>
+
+    </article>
+  `;
+}
+
+function renderMedia(url){
+
+  if(!url)return "";
+
+  if(url.startsWith("data:video") ||
+     /\.(mp4|webm|mov)(\?|$)/i.test(url)){
+    return `<div class="filePreview">
+      <video class="postMedia" src="${escapeAttr(url)}" controls></video>
+    </div>`;
+  }
+
+  return `<div class="filePreview">
+    <img class="postMedia" src="${escapeAttr(url)}">
+  </div>`;
+}
+
+/* =========================
+   CREATE POST
+========================= */
+
+function previewMedia(input){
+
+  const file=input.files?.[0];
+
+  if(!file)return;
+
+  if(file.size>8*1024*1024){
+    alert("Untuk tahap awal, ukuran file maksimal 8 MB.");
+    input.value="";
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    selectedMedia={
+      name:file.name,
+      type:file.type,
+      data:reader.result
+    };
+
+    const preview=document.getElementById("uploadPreview");
+
+    preview.innerHTML=
+      renderMedia(reader.result);
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function createPost(){
+
+  const content=
+    document.getElementById("postContent")
+    .value.trim();
+
+  if(!content && !selectedMedia){
+    alert("Tulis sesuatu atau pilih foto/video.");
+    return;
+  }
+
+  const button=document.querySelector(".postBtn");
+  button.disabled=true;
+  button.textContent="UPLOAD...";
+
+  const result=await mexaAPI(
+    "create_post",
+    {
+      content,
+      image_url:selectedMedia
+        ?selectedMedia.data
+        :""
+    }
+  );
+
+  button.disabled=false;
+  button.textContent="POST";
+
+  if(!result.success){
+    alert(
+      result.error ||
+      result.message ||
+      "Gagal membuat postingan."
+    );
+    return;
+  }
+
+  clearComposer();
+  await loadPosts();
+}
+
+function clearComposer(){
+
+  document.getElementById("postContent").value="";
+  document.getElementById("mediaInput").value="";
+  document.getElementById("uploadPreview").innerHTML="";
+  selectedMedia=null;
+}
+
+/* =========================
+   LIKE
+========================= */
+
+async function likePost(postId){
+
+  const result=await mexaAPI(
+    "like",
+    {
+      post_id:postId
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal menyukai postingan.");
+    return;
+  }
+
+  await loadPosts();
+}
+
+/* =========================
+   COMMENTS
+========================= */
+
+async function toggleComments(postId){
+
+  const box=document.getElementById(
+    "comments-"+postId
+  );
+
+  if(box.classList.contains("hidden")){
+    box.classList.remove("hidden");
+    await loadComments(postId);
+  }else{
+    box.classList.add("hidden");
+  }
+}
+
+async function loadComments(postId){
+
+  const list=document.getElementById(
+    "commentList-"+postId
+  );
+
+  list.innerHTML=
+    '<p style="color:var(--muted);padding:10px 0">Memuat komentar...</p>';
+
+  const result=await mexaAPI(
+    "comments",
+    {
+      post_id:postId
+    }
+  );
+
+  if(!result.success){
+    list.innerHTML="";
+    return;
+  }
+
+  const comments=
+    result.comments ||
+    result.data ||
+    [];
+
+  if(!comments.length){
+    list.innerHTML=
+      '<p style="color:var(--muted);padding:10px 0">Belum ada komentar.</p>';
+    return;
+  }
+
+  list.innerHTML=comments.map(c=>`
+    <div style="padding:9px 0;border-bottom:1px solid var(--line)">
+      <b>${escapeHTML(c.display_name||c.username||"User")}</b>
+      <div style="color:#c4cada;margin-top:3px">
+        ${escapeHTML(c.content||"")}
+      </div>
+    </div>
+  `).join("");
+}
+
+async function sendComment(postId){
+
+  const input=document.getElementById(
+    "commentInput-"+postId
+  );
+
+  const content=input.value.trim();
+
+  if(!content)return;
+
+  const result=await mexaAPI(
+    "comment",
+    {
+      post_id:postId,
+      content
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal mengirim komentar.");
+    return;
+  }
+
+  input.value="";
+  await loadComments(postId);
+}
+
+/* =========================
+   SHARE
+========================= */
+
+async function sharePost(postId){
+
+  const result=await mexaAPI(
+    "share",
+    {
+      post_id:postId
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal membagikan.");
+    return;
+  }
+
+  const url=
+    location.origin+
+    location.pathname+
+    "?post="+postId;
+
+  try{
+    await navigator.clipboard.writeText(url);
+    alert("Link postingan disalin.");
+  }catch(e){
+    alert("Postingan berhasil dibagikan.");
+  }
+
+  await loadPosts();
+}
+
+/* =========================
+   POST MENU
+========================= */
+
+function openPostMenu(event,postId,userId){
+
+  event.stopPropagation();
+
+  const menu=document.getElementById("postMenu");
+
+  const currentId=
+    currentUser?.id ||
+    currentUser?.user_id ||
+    "";
+
+  const own=
+    currentId &&
+    String(currentId)===String(userId);
+
+  menu.innerHTML=
+    own
+    ?`
+      <button onclick="editPost('${escapeAttr(postId)}')">✎ Edit</button>
+      <button class="danger" onclick="deletePost('${escapeAttr(postId)}')">⌫ Hapus</button>
+    `
+    :`
+      <button onclick="alert('Fitur laporan akan tersedia di tahap berikutnya.')">⚑ Laporkan</button>
+    `;
+
+  menu.classList.remove("hidden");
+
+  menu.style.left=
+    Math.min(
+      event.clientX,
+      window.innerWidth-170
+    )+"px";
+
+  menu.style.top=
+    Math.min(
+      event.clientY,
+      window.innerHeight-130
+    )+"px";
+}
+
+document.addEventListener("click",()=>{
+  document.getElementById("postMenu")
+    .classList.add("hidden");
+});
+
+async function editPost(postId){
+
+  const post=allPosts.find(
+    p=>String(p.id)===String(postId)
+  );
+
+  if(!post)return;
+
+  const newContent=prompt(
+    "Edit postingan:",
+    post.content || ""
+  );
+
+  if(newContent===null)return;
+
+  const result=await mexaAPI(
+    "edit_post",
+    {
+      post_id:postId,
+      content:newContent,
+      image_url:post.image_url || ""
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal mengedit.");
+    return;
+  }
+
+  await loadPosts();
+}
+
+async function deletePost(postId){
+
+  if(!confirm("Hapus postingan ini?"))return;
+
+  const result=await mexaAPI(
+    "delete_post",
+    {
+      post_id:postId
+    }
+  );
+
+  if(!result.success){
+    alert(result.error || "Gagal menghapus.");
+    return;
+  }
+
+  await loadPosts();
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchPeople(value){
+
+  const q=value.trim().toLowerCase();
+
+  if(!q){
+    renderPosts(allPosts);
+    return;
+  }
+
+  const filtered=allPosts.filter(post=>{
+    return (
+      String(post.display_name||"")
+        .toLowerCase()
+        .includes(q)
+      ||
+      String(post.username||"")
+        .toLowerCase()
+        .includes(q)
+      ||
+      String(post.content||"")
+        .toLowerCase()
+        .includes(q)
+    );
+  });
+
+  renderPosts(filtered);
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(page){
+
+  [
+    "pageHome",
+    "pageMonetisasi",
+    "pageReels",
+    "pageProfile"
+  ].forEach(id=>{
+    document.getElementById(id)
+      .classList.add("hidden");
+  });
+
+  if(page==="home"){
+    document.getElementById("pageHome")
+      .classList.remove("hidden");
+  }
+
+  if(page==="monetisasi"){
+    document.getElementById("pageMonetisasi")
+      .classList.remove("hidden");
+  }
+
+  if(page==="reels"){
+    document.getElementById("pageReels")
+      .classList.remove("hidden");
+  }
+
+  if(page==="profile"){
+    document.getElementById("pageProfile")
+      .classList.remove("hidden");
+
+    renderProfilePosts();
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+function renderProfilePosts(){
+
+  const id=
+    currentUser?.id ||
+    currentUser?.user_id;
+
+  if(!id)return;
+
+  const mine=allPosts.filter(
+    p=>String(p.user_id)===String(id)
+  );
+
+  document.getElementById("profilePosts")
+    .innerHTML=mine.map(post=>postHTML(post)).join("")
+    ||
+    '<div class="composer" style="text-align:center;color:var(--muted)">Belum ada postingan.</div>';
+}
+
+function showSettings(){
+  document.getElementById("settingsOverlay")
+    .classList.remove("hidden");
+}
+
+function showMessenger(){
+  document.getElementById("messengerOverlay")
+    .classList.remove("hidden");
+}
+
+function closeOverlay(id){
+  document.getElementById(id)
+    .classList.add("hidden");
+}
+
+/* =========================
+   HELPERS
+========================= */
+
+function formatDate(date){
+
+  if(!date)return "";
+
+  try{
+    return new Date(date).toLocaleString(
+      "id-ID",
+      {
+        dateStyle:"short",
+        timeStyle:"short"
+      }
+    );
+  }catch(e){
+    return "";
+  }
+}
+
+function escapeHTML(value){
+
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeAttr(value){
+  return escapeHTML(value);
+}
+
+/* =========================
+   START
+========================= */
+
+async function start(){
+
+  if(!getToken())return;
+
+  const ok=await refreshSession();
+
+  if(!ok && !getToken())return;
+
+  await enterApp();
+}
+
+start();
+</script>
+
+</body>
+</html>
